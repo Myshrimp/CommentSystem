@@ -2,8 +2,7 @@ package biz
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	v1 "review-service/api/review/v1"
 	"review-service/internal/data/model"
 	"review-service/pkg/snowflake"
 
@@ -24,7 +23,7 @@ type ReviewRepo interface {
 // ReviewUsecase is a Review usecase.
 type ReviewUsecase struct {
 	repo ReviewRepo
-	log *log.Helper
+	log  *log.Helper
 }
 
 // NewReviewUsecase new a Review usecase.
@@ -41,10 +40,10 @@ func (uc *ReviewUsecase) CreateReview(ctx context.Context, review *model.ReviewI
 	// 1. validate review
 	reviews, err := uc.repo.GetReviewsByOrderID(ctx, review.OrderID)
 	if err != nil {
-		return nil, errors.New("Failed to query database")
+		return nil, v1.ErrorDbFailed("Failed to query reviews by order ID: %v", err)
 	}
 	if len(reviews) > 0 {
-		return nil, fmt.Errorf("Order:%d is already reviewed", review.OrderID)
+		return nil, v1.ErrorOrderReviewed("Order:%d is already reviewed", review.OrderID)
 	}
 	// 2. generate review ID
 	id := snowflake.GenerateID()
