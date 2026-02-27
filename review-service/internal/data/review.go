@@ -29,3 +29,9 @@ func (r *reviewRepo) SaveReview(ctx context.Context, review *model.ReviewInfo) (
 	}
 	return review, nil
 }
+
+func (r *reviewRepo) GetReviewsByOrderID(ctx context.Context, orderID int64) ([]*model.ReviewInfo, error) {
+	return r.data.query.ReviewInfo.WithContext(ctx).
+		Where(r.data.query.ReviewInfo.OrderID.Eq(orderID)).
+		Find()
+}
