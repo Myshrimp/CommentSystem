@@ -18,6 +18,13 @@ type Review struct {
 type ReviewRepo interface {
 	SaveReview(context.Context, *model.ReviewInfo) (*model.ReviewInfo, error)
 	GetReviewsByOrderID(context.Context, int64) ([]*model.ReviewInfo, error)
+	GetReview(context.Context, int64) (*model.ReviewInfo, error)
+	SaveReply(context.Context, *model.ReviewReplyInfo) (*model.ReviewReplyInfo, error)
+	GetReviewReply(context.Context, int64) ([]*model.ReviewReplyInfo, error)
+	AuditReview(context.Context, *AuditParam) error
+	AppealReview(context.Context, *AppealParam) error
+	AuditAppeal(context.Context, *AuditAppealParam) error
+	ListReviewByUserID(ctx context.Context, userID int64, offset, limit int) ([]*model.ReviewInfo, error)
 }
 
 // ReviewUsecase is a Review usecase.
@@ -53,4 +60,20 @@ func (uc *ReviewUsecase) CreateReview(ctx context.Context, review *model.ReviewI
 	// 3. query order and product snap-shot info
 	// 4. save review
 	return uc.repo.SaveReview(ctx, review)
+}
+
+func (uc *ReviewUsecase) CreateReply(ctx context.Context, param *ReplyParam) (*model.ReviewReplyInfo, error) {
+	// Implementation for creating a review reply
+	uc.log.WithContext(ctx).Debugf("[biz] CreateReply: %v", param)
+	// 1. validate reply
+	// 2. generate reply ID
+	id := snowflake.GenerateID()
+	reply := &model.ReviewReplyInfo{
+		ReviewID: param.ReviewID,
+		StoreID:  param.StoreID,
+		Content:  param.Content,
+		ReplyID:  id,
+	}
+	// 3. save reply
+	return uc.repo.SaveReply(ctx, reply)
 }

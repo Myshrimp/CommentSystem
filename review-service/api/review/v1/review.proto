@@ -16,10 +16,50 @@ service Review {
 			body: "*"
 		};
 	};
-	rpc UpdateReview (UpdateReviewRequest) returns (UpdateReviewReply);
-	rpc DeleteReview (DeleteReviewRequest) returns (DeleteReviewReply);
-	rpc GetReview (GetReviewRequest) returns (GetReviewReply);
-	rpc ListReview (ListReviewRequest) returns (ListReviewReply);
+	rpc AppealReview (AppealReviewRequest) returns (AppealReviewReply){
+		option (google.api.http) = {
+			post: "/v1/appeal"
+			body: "*"
+		};
+	};
+	rpc ReplyReview (ReplyReviewRequest) returns (ReplyReviewReply){
+		option (google.api.http) = {
+			post: "/v1/reply"
+			body: "*"
+		};
+	};
+	rpc GetReviewByOrderID (GetReviewByOrderIDRequest) returns (GetReviewByOrderIDReply){
+		option (google.api.http) = {
+			get: "/v1/review/order/{orderID}"
+		};
+	};
+	rpc ListReviewByUserID (ListReviewByUserIDRequest) returns (ListReviewByUserIDReply){
+		option (google.api.http) = {
+			get: "/v1/review/user/{userID}"
+		};
+	};
+	rpc AuditAppeal (AuditAppealRequest) returns (AuditAppealReply){
+		option (google.api.http) = {
+			post: "/v1/appeal/audit"
+			body: "*"
+		};
+	};
+	rpc AuditReview (AuditReviewRequest) returns (AuditReviewReply){
+		option (google.api.http) = {
+			post: "/v1/review/audit"
+			body: "*"
+		};
+	};
+	rpc GetReviewReplyList (GetReviewReplyRequest) returns (GetReviewReplyReply){
+		option (google.api.http) = {
+			get: "/v1/review/reply/{reviewID}"
+		};
+	};
+	rpc GetReview (GetReviewRequest) returns (GetReviewReply){
+		option (google.api.http) = {
+			get: "/v1/review/{reviewID}"
+		};
+	};
 }
 
 message CreateReviewRequest {
@@ -37,14 +77,89 @@ message CreateReviewReply {
 	int64 reviewID = 1;
 }
 
-message UpdateReviewRequest {}
-message UpdateReviewReply {}
+message AppealReviewRequest {
+	int64 reviewID = 1;
+	int64 storeID = 2;
+}
+message AppealReviewReply {
+	bool succeed = 1;
+	int64 appealID = 2;
+}
 
-message DeleteReviewRequest {}
-message DeleteReviewReply {}
+message ReplyReviewRequest {
+	int64 reviewID = 1;
+	int64 storeID = 2;
+	string content = 3;
+	string picInfo = 4;
+	string videoInfo = 5;
+}
+message ReplyReviewReply {
+	bool succeed = 1;
+	int64 replyID = 2;
+}
 
-message GetReviewRequest {}
-message GetReviewReply {}
+message GetReviewByOrderIDRequest {
+	int64 orderID = 1;
+}
+message GetReviewByOrderIDReply {
+	repeated GetReviewReply reviews = 1;
+}
 
-message ListReviewRequest {}
-message ListReviewReply {}
+message ListReviewByUserIDRequest {
+	int64 userID = 1;
+}
+
+message ListReviewByUserIDReply {
+	repeated GetReviewReply reviews = 1;
+}
+
+message GetReviewRequest {
+	int64 reviewID = 1;
+}
+
+message GetReviewReply {
+	int64 userID = 1;
+	int64 orderID = 2;
+	int32 score = 3;
+	int32 serviceScore = 4;
+	int32 expressScore = 5;
+	string content = 6;
+	string picInfo = 7;
+	string videoInfo = 8;
+	bool anonymous = 9;
+}
+
+message AuditAppealRequest {
+	int64 appealID = 1;
+}
+
+message AuditAppealReply {
+	bool succeed = 1;
+	int64 auditID = 2;
+}
+
+message AuditReviewRequest {
+	int64 reviewID = 1;
+	int64 orderID = 2;
+}
+
+message AuditReviewReply {
+	bool succeed = 1;
+	int64 auditID = 2;
+}
+
+message GetReviewReplyRequest {
+	int64 reviewID = 1;
+}
+
+message GetReviewReplyReply {
+	repeated ReplyInfo replyList = 1;
+}
+
+message ReplyInfo {
+	int64 userID = 1; //reply to who
+	string content = 2;
+	string picInfo = 3;
+	string videoInfo = 4;
+}
+

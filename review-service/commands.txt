@@ -1,0 +1,2 @@
+kratos proto client api/review/v1/review.proto                             
+kratos proto server api/review/v1/review.proto -t internal/service         

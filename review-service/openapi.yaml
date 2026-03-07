@@ -6,6 +6,78 @@ info:
     title: Review API
     version: 0.0.1
 paths:
+    /v1/appeal:
+        post:
+            tags:
+                - Review
+            operationId: Review_AppealReview
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AppealReviewRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AppealReviewReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/appeal/audit:
+        post:
+            tags:
+                - Review
+            operationId: Review_AuditAppeal
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AuditAppealRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AuditAppealReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/reply:
+        post:
+            tags:
+                - Review
+            operationId: Review_ReplyReview
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ReplyReviewRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ReplyReviewReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/review:
         post:
             tags:
@@ -30,8 +102,168 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1/review/audit:
+        post:
+            tags:
+                - Review
+            operationId: Review_AuditReview
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AuditReviewRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AuditReviewReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/review/order/{orderID}:
+        get:
+            tags:
+                - Review
+            operationId: Review_GetReviewByOrderID
+            parameters:
+                - name: orderID
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetReviewByOrderIDReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/review/reply/{reviewID}:
+        get:
+            tags:
+                - Review
+            operationId: Review_GetReviewReplyList
+            parameters:
+                - name: reviewID
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetReviewReplyReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/review/user/{userID}:
+        get:
+            tags:
+                - Review
+            operationId: Review_ListReviewByUserID
+            parameters:
+                - name: userID
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListReviewByUserIDReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/review/{reviewID}:
+        get:
+            tags:
+                - Review
+            operationId: Review_GetReview
+            parameters:
+                - name: reviewID
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetReviewReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
+        AppealReviewReply:
+            type: object
+            properties:
+                succeed:
+                    type: boolean
+                appealID:
+                    type: string
+        AppealReviewRequest:
+            type: object
+            properties:
+                reviewID:
+                    type: string
+                storeID:
+                    type: string
+        AuditAppealReply:
+            type: object
+            properties:
+                succeed:
+                    type: boolean
+                auditID:
+                    type: string
+        AuditAppealRequest:
+            type: object
+            properties:
+                appealID:
+                    type: string
+        AuditReviewReply:
+            type: object
+            properties:
+                succeed:
+                    type: boolean
+                auditID:
+                    type: string
+        AuditReviewRequest:
+            type: object
+            properties:
+                reviewID:
+                    type: string
+                orderID:
+                    type: string
         CreateReviewReply:
             type: object
             properties:
@@ -61,6 +293,44 @@ components:
                     type: string
                 anonymous:
                     type: boolean
+        GetReviewByOrderIDReply:
+            type: object
+            properties:
+                reviews:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetReviewReply'
+        GetReviewReply:
+            type: object
+            properties:
+                userID:
+                    type: string
+                orderID:
+                    type: string
+                score:
+                    type: integer
+                    format: int32
+                serviceScore:
+                    type: integer
+                    format: int32
+                expressScore:
+                    type: integer
+                    format: int32
+                content:
+                    type: string
+                picInfo:
+                    type: string
+                videoInfo:
+                    type: string
+                anonymous:
+                    type: boolean
+        GetReviewReplyReply:
+            type: object
+            properties:
+                replyList:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ReplyInfo'
         GoogleProtobufAny:
             type: object
             properties:
@@ -69,6 +339,44 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListReviewByUserIDReply:
+            type: object
+            properties:
+                reviews:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetReviewReply'
+        ReplyInfo:
+            type: object
+            properties:
+                userID:
+                    type: string
+                content:
+                    type: string
+                picInfo:
+                    type: string
+                videoInfo:
+                    type: string
+        ReplyReviewReply:
+            type: object
+            properties:
+                succeed:
+                    type: boolean
+                replyID:
+                    type: string
+        ReplyReviewRequest:
+            type: object
+            properties:
+                reviewID:
+                    type: string
+                storeID:
+                    type: string
+                content:
+                    type: string
+                picInfo:
+                    type: string
+                videoInfo:
+                    type: string
         Status:
             type: object
             properties:
