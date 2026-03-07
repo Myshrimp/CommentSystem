@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	pb "review-service/api/review/v1"
+	pb "review-service/review-api/review/v1"
 	"review-service/internal/biz"
 )
 

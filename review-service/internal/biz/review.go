@@ -2,7 +2,7 @@ package biz
 
 import (
 	"context"
-	v1 "review-service/api/review/v1"
+	v1 "review-service/review-api/review/v1"
 	"review-service/internal/data/model"
 	"review-service/pkg/snowflake"
 
