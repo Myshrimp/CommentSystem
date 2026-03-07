@@ -47,7 +47,7 @@ func (r *reviewRepo) SaveReply(ctx context.Context, reply *model.ReviewReplyInfo
 	// 1. validate data
 	// 1.1. check if reply already exists
 	review, err := r.data.query.ReviewInfo.WithContext(ctx).
-		Where(r.data.query.ReviewInfo.HasReply.Eq(1)).
+		Where(r.data.query.ReviewInfo.ReviewID.Eq(reply.ReviewID)).
 		First()
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (r *reviewRepo) SaveReply(ctx context.Context, reply *model.ReviewReplyInfo
 	if review.HasReply == 1 {
 		return nil, errors.New("review already has reply")
 	}
-	// 1.2. rights check, only store owner can reply the review. 
+	// 1.2. rights check, only store owner can reply the review.
 	if review.StoreID != reply.StoreID {
 		return nil, errors.New("only store owner can reply the review")
 	}
